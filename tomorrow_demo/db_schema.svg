@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="920" viewBox="0 0 1500 920">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#607487"/></marker>
+    <style>
+      .title{font:700 30px Arial;fill:#17212b}.sub{font:16px Arial;fill:#5a6773}.box{fill:#f7fafc;stroke:#5f7890;stroke-width:2}.head{fill:#315b7d}.h{font:700 18px Arial;fill:white}.f{font:15px Arial;fill:#24313d}.pk{font:700 15px Arial;fill:#9b5b00}.rel{stroke:#607487;stroke-width:2;fill:none;marker-end:url(#arrow)}.label{font:14px Arial;fill:#465866}
+    </style>
+  </defs>
+  <rect width="1500" height="920" fill="white"/>
+  <text x="55" y="52" class="title">Схема базы данных сервиса обработки договоров</text>
+  <text x="55" y="82" class="sub">SQLite для MVP; логическая схема переносится в PostgreSQL</text>
+
+  <g transform="translate(55 125)"><rect class="box" width="315" height="270" rx="8"/><rect class="head" width="315" height="46" rx="8"/><rect class="head" y="37" width="315" height="9"/><text x="18" y="30" class="h">documents</text><text x="18" y="76" class="pk">PK id</text><text x="18" y="104" class="f">document_uid, filename</text><text x="18" y="132" class="f">file_format, storage_path</text><text x="18" y="160" class="f">sha256</text><text x="18" y="188" class="f">has_text_layer</text><text x="18" y="216" class="f">processing_status</text><text x="18" y="244" class="f">uploaded_at</text></g>
+  <g transform="translate(500 125)"><rect class="box" width="315" height="245" rx="8"/><rect class="head" width="315" height="46" rx="8"/><rect class="head" y="37" width="315" height="9"/><text x="18" y="30" class="h">contracts</text><text x="18" y="76" class="pk">PK id · FK document_id</text><text x="18" y="104" class="f">contract_type</text><text x="18" y="132" class="f">contract_number</text><text x="18" y="160" class="f">contract_date</text><text x="18" y="188" class="f">amount, currency</text><text x="18" y="216" class="f">updated_at</text></g>
+  <g transform="translate(1100 125)"><rect class="box" width="315" height="190" rx="8"/><rect class="head" width="315" height="46" rx="8"/><rect class="head" y="37" width="315" height="9"/><text x="18" y="30" class="h">parties</text><text x="18" y="76" class="pk">PK id</text><text x="18" y="106" class="f">normalized_name</text><text x="18" y="136" class="f">party_type</text></g>
+  <g transform="translate(925 430)"><rect class="box" width="360" height="215" rx="8"/><rect class="head" width="360" height="46" rx="8"/><rect class="head" y="37" width="360" height="9"/><text x="18" y="30" class="h">contract_parties</text><text x="18" y="76" class="pk">FK contract_id · FK party_id</text><text x="18" y="108" class="f">role_code</text><text x="18" y="140" class="f">role_label</text><text x="18" y="180" class="label">Любые роли: заказчик, поставщик,</text><text x="18" y="202" class="label">арендатор, агент и другие</text></g>
+  <g transform="translate(55 535)"><rect class="box" width="350" height="230" rx="8"/><rect class="head" width="350" height="46" rx="8"/><rect class="head" y="37" width="350" height="9"/><text x="18" y="30" class="h">processing_runs</text><text x="18" y="76" class="pk">PK id · FK document_id</text><text x="18" y="108" class="f">pipeline_version</text><text x="18" y="140" class="f">extraction_model</text><text x="18" y="172" class="f">started_at, finished_at</text><text x="18" y="204" class="f">status, error_message</text></g>
+  <g transform="translate(510 535)"><rect class="box" width="390" height="300" rx="8"/><rect class="head" width="390" height="46" rx="8"/><rect class="head" y="37" width="390" height="9"/><text x="18" y="30" class="h">extraction_results</text><text x="18" y="76" class="pk">PK id · FK run_id</text><text x="18" y="108" class="f">field_name</text><text x="18" y="140" class="f">raw_value</text><text x="18" y="172" class="f">normalized_value</text><text x="18" y="204" class="f">page_number, source_context</text><text x="18" y="236" class="f">extraction_method, confidence</text><text x="18" y="268" class="f">is_verified</text></g>
+
+  <path class="rel" d="M370 235 H490"/><text x="397" y="222" class="label">1 : 0..1</text>
+  <path class="rel" d="M215 395 V525"/><text x="228" y="470" class="label">1 : N запусков</text>
+  <path class="rel" d="M405 650 H500"/><text x="430" y="636" class="label">1 : N</text>
+  <path class="rel" d="M815 245 C960 245 950 475 925 500"/><text x="865" y="332" class="label">1 : N ролей</text>
+  <path class="rel" d="M1250 315 V420"/><text x="1263" y="378" class="label">1 : N</text>
+  <text x="55" y="885" class="sub">Ключевая идея: итоговые данные отделены от истории извлечения, а стороны — от их ролей в конкретном договоре.</text>
+</svg>
+

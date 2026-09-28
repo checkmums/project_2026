@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="430" viewBox="0 0 1400 430">
+<rect width="1400" height="430" fill="#ffffff"/>
+<text x="60" y="62" font-family="Arial" font-size="30" font-weight="700" fill="#17212b">Архитектура прототипа обработки договоров</text>
+<text x="60" y="96" font-family="Arial" font-size="17" fill="#59636e">Первая версия: локальный Python-конвейер без отдельного backend и сложного интерфейса</text>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#66788a"/></marker></defs>
+<g font-family="Arial" text-anchor="middle">
+  <g><rect x="55" y="155" width="190" height="105" rx="10" fill="#eef3f7" stroke="#66819a" stroke-width="2"/><text x="150" y="194" font-size="20" font-weight="700" fill="#203040">Документы</text><text x="150" y="224" font-size="16" fill="#465866">PDF и DOCX</text></g>
+  <g><rect x="295" y="155" width="210" height="105" rx="10" fill="#eef3f7" stroke="#66819a" stroke-width="2"/><text x="400" y="190" font-size="20" font-weight="700" fill="#203040">Чтение текста</text><text x="400" y="220" font-size="15" fill="#465866">pypdf</text><text x="400" y="242" font-size="15" fill="#465866">python-docx</text></g>
+  <g><rect x="555" y="155" width="230" height="105" rx="10" fill="#fff5dd" stroke="#b18a35" stroke-width="2"/><text x="670" y="190" font-size="20" font-weight="700" fill="#4a3a17">Извлечение полей</text><text x="670" y="220" font-size="15" fill="#665527">RegEx</text><text x="670" y="242" font-size="15" fill="#665527">Natasha позднее</text></g>
+  <g><rect x="835" y="155" width="220" height="105" rx="10" fill="#eef7ef" stroke="#5e8b65" stroke-width="2"/><text x="945" y="190" font-size="20" font-weight="700" fill="#243e28">Проверка</text><text x="945" y="220" font-size="15" fill="#49644d">формат даты</text><text x="945" y="242" font-size="15" fill="#49644d">сумма и стороны</text></g>
+  <g><rect x="1105" y="155" width="230" height="105" rx="10" fill="#eef3f7" stroke="#66819a" stroke-width="2"/><text x="1220" y="190" font-size="20" font-weight="700" fill="#203040">Результат</text><text x="1220" y="220" font-size="15" fill="#465866">CSV на первом этапе</text><text x="1220" y="242" font-size="15" fill="#465866">SQLite позднее</text></g>
+</g>
+<g stroke="#66788a" stroke-width="3" fill="none" marker-end="url(#arrow)"><path d="M245 207 H285"/><path d="M505 207 H545"/><path d="M785 207 H825"/><path d="M1055 207 H1095"/></g>
+<rect x="380" y="326" width="640" height="62" rx="8" fill="#f7f7f7" stroke="#b5bcc3"/>
+<text x="700" y="352" text-anchor="middle" font-family="Arial" font-size="16" font-weight="700" fill="#39434c">Эталонная разметка датасета</text>
+<text x="700" y="376" text-anchor="middle" font-family="Arial" font-size="15" fill="#5b6570">нужна для сравнения ожидаемых и извлеченных значений</text>
+<path d="M700 326 V273" stroke="#87939e" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+</svg>

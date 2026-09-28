@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="820" viewBox="0 0 1700 820">
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#66788a"/></marker><style>.t{font:700 30px Arial;fill:#17212b}.s{font:16px Arial;fill:#59636e}.b{fill:#eef3f7;stroke:#66819a;stroke-width:2}.m{fill:#fff4d8;stroke:#b18a35;stroke-width:2}.g{fill:#eef7ef;stroke:#5e8b65;stroke-width:2}.h{font:700 17px Arial;fill:#203040;text-anchor:middle}.p{font:14px Arial;fill:#465866;text-anchor:middle}.e{stroke:#66788a;stroke-width:2.5;fill:none;marker-end:url(#a)}.d{font:13px Arial;fill:#59636e}</style></defs>
+  <rect width="1700" height="820" fill="white"/><text x="50" y="52" class="t">Пайплайн извлечения реквизитов договора</text><text x="50" y="82" class="s">Гибрид правил, русскоязычной NER-модели и отдельной OCR-ветки</text>
+  <g transform="translate(45 150)"><rect class="b" width="190" height="100" rx="10"/><text x="95" y="42" class="h">Загрузка</text><text x="95" y="70" class="p">PDF / DOCX</text></g>
+  <g transform="translate(285 150)"><rect class="b" width="215" height="100" rx="10"/><text x="107" y="36" class="h">Проверка файла</text><text x="107" y="63" class="p">тип, размер, хеш</text><text x="107" y="84" class="p">текстовый слой</text></g>
+  <g transform="translate(570 115)"><rect class="b" width="220" height="80" rx="10"/><text x="110" y="34" class="h">DOCX</text><text x="110" y="59" class="p">python-docx</text></g>
+  <g transform="translate(570 220)"><rect class="b" width="220" height="80" rx="10"/><text x="110" y="34" class="h">PDF с текстом</text><text x="110" y="59" class="p">pypdf / pdfplumber</text></g>
+  <g transform="translate(570 325)"><rect class="m" width="220" height="80" rx="10"/><text x="110" y="34" class="h">Скан</text><text x="110" y="59" class="p">PaddleOCR</text></g>
+  <g transform="translate(860 200)"><rect class="b" width="235" height="110" rx="10"/><text x="117" y="37" class="h">Нормализация</text><text x="117" y="65" class="p">переносы, пробелы</text><text x="117" y="88" class="p">даты и суммы</text></g>
+  <g transform="translate(1170 100)"><rect class="m" width="220" height="90" rx="10"/><text x="110" y="36" class="h">RegEx</text><text x="110" y="64" class="p">номер, дата, сумма</text></g>
+  <g transform="translate(1170 220)"><rect class="m" width="220" height="90" rx="10"/><text x="110" y="36" class="h">Natasha NER</text><text x="110" y="64" class="p">организации и ФИО</text></g>
+  <g transform="translate(1170 340)"><rect class="m" width="220" height="90" rx="10"/><text x="110" y="36" class="h">Словарь ролей</text><text x="110" y="64" class="p">заказчик, агент и др.</text></g>
+  <g transform="translate(1455 205)"><rect class="g" width="205" height="115" rx="10"/><text x="102" y="35" class="h">Кандидаты</text><text x="102" y="62" class="p">оценка уверенности</text><text x="102" y="85" class="p">валидация формата</text></g>
+  <g transform="translate(1170 550)"><rect class="g" width="220" height="100" rx="10"/><text x="110" y="39" class="h">SQLite</text><text x="110" y="67" class="p">результаты и история</text></g>
+  <g transform="translate(1455 550)"><rect class="g" width="205" height="100" rx="10"/><text x="102" y="39" class="h">Реестр</text><text x="102" y="67" class="p">проверка человеком</text></g>
+  <g transform="translate(1455 700)"><rect class="b" width="205" height="80" rx="10"/><text x="102" y="34" class="h">Оценка качества</text><text x="102" y="59" class="p">сравнение с разметкой</text></g>
+  <path class="e" d="M235 200 H275"/><path class="e" d="M500 200 C535 200 535 155 560 155"/><path class="e" d="M500 200 H560 V260"/><path class="e" d="M500 200 C535 200 535 365 560 365"/>
+  <path class="e" d="M790 155 C830 155 830 235 850 235"/><path class="e" d="M790 260 H850"/><path class="e" d="M790 365 C830 365 830 285 850 285"/>
+  <path class="e" d="M1095 255 C1130 255 1130 145 1160 145"/><path class="e" d="M1095 255 H1160"/><path class="e" d="M1095 255 C1130 255 1130 385 1160 385"/>
+  <path class="e" d="M1390 145 C1430 145 1430 240 1445 240"/><path class="e" d="M1390 265 H1445"/><path class="e" d="M1390 385 C1430 385 1430 300 1445 300"/>
+  <path class="e" d="M1555 320 V500 H1395 V600"/><path class="e" d="M1390 600 H1445"/><path class="e" d="M1557 650 V690"/>
+  <text x="50" y="760" class="s">MVP работает локально и воспроизводимо. Нейросеть решает только задачу NER; формальные поля остаются прозрачными правилами.</text>
+</svg>
