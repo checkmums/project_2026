@@ -1,0 +1,10 @@
+[project]
+name = "contract-extractor"
+version = "0.2.0.dev0"
+description = "MVP service for extracting key attributes from Russian contracts"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-ra"

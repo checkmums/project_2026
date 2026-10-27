@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Реестр договоров</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div>
+      <h1>Реестр договоров</h1>
+      <p>Загрузка PDF и DOCX с автоматическим извлечением реквизитов</p>
+    </div>
+    <span class="stage">Версия в разработке</span>
+  </header>
+
+  <main>
+    <section class="upload-section">
+      <div>
+        <h2>Загрузить договор</h2>
+        <p>Поддерживаются DOCX и PDF с текстовым слоем, до 20 МБ.</p>
+      </div>
+      <div class="upload-controls">
+        <label class="file-button" for="file-input">Выбрать файл</label>
+        <input id="file-input" type="file" accept=".pdf,.docx" multiple>
+        <span id="file-name">Файл не выбран</span>
+        <button id="upload-button" type="button" disabled>Загрузить</button>
+      </div>
+      <div id="message" class="message" hidden></div>
+    </section>
+
+    <section class="registry-section">
+      <div class="registry-heading">
+        <div>
+          <h2>Договоры</h2>
+          <p id="document-count">Загрузка списка…</p>
+        </div>
+        <input id="search-input" type="search" placeholder="Поиск по номеру или стороне">
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Файл</th>
+              <th>Номер</th>
+              <th>Дата</th>
+              <th>Заказчик</th>
+              <th>Исполнитель</th>
+              <th>Сумма</th>
+              <th>Статус</th>
+            </tr>
+          </thead>
+          <tbody id="registry-body"></tbody>
+        </table>
+        <div id="empty-state" class="empty-state" hidden>
+          Договоров пока нет. Загрузите первый файл.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="details-dialog">
+    <div class="dialog-header">
+      <div>
+        <h2 id="details-title">Карточка договора</h2>
+        <p id="details-subtitle"></p>
+      </div>
+      <button id="close-dialog" class="icon-button" type="button" aria-label="Закрыть">×</button>
+    </div>
+    <div id="details-content" class="details-content"></div>
+    <div class="dialog-actions">
+      <button id="delete-button" class="danger-button" type="button">Удалить документ</button>
+      <button id="close-dialog-bottom" type="button">Закрыть</button>
+    </div>
+  </dialog>
+
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
