@@ -55,3 +55,22 @@ def test_natasha_confirms_rule_based_party() -> None:
     assert customer.value == "ООО «Ромашка»"
     assert customer.method == "hybrid:regex+natasha_ner"
 
+
+def test_understands_full_legal_company_name_and_supplier_roles() -> None:
+    text = chunks(
+        "ООО «Агромаркет», именуемое в дальнейшем «Поставщик», с одной стороны, и",
+        "Акционерное общество «Агрофирма Мценская», именуемое в дальнейшем «Покупатель», с другой стороны.",
+    )
+    customer, contractor = extract_parties(text)
+    assert customer.value == "Акционерное общество «Агрофирма Мценская»"
+    assert customer.role_label == "Покупатель"
+    assert contractor.value == "ООО «Агромаркет»"
+    assert contractor.role_label == "Поставщик"
+
+
+def test_accepts_money_with_one_decimal_digit() -> None:
+    text = chunks("Общая стоимость Товара по Спецификации 440 400,0 рублей.")
+    amount, currency = extract_amount(text)
+    assert amount.value == 440400.0
+    assert currency == "RUB"
+

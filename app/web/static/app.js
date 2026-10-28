@@ -126,8 +126,9 @@ registryBody.addEventListener("click", async (event) => {
   detailsContent.innerHTML = Object.entries(fieldLabels).map(([key, label]) => {
     const field = record.extraction[key];
     const value = key === "amount" ? formatAmount(field.value, record.extraction.currency) : field.value || "Не найдено";
+    const displayLabel = key === "customer" || key === "contractor" ? field.role_label || label : label;
     return `<div class="field-row">
-      <div class="field-heading"><span class="field-name">${label}</span>${statusBadge(field.status)}</div>
+      <div class="field-heading"><span class="field-name">${escapeHtml(displayLabel)}</span>${statusBadge(field.status)}</div>
       <div class="field-value">${escapeHtml(value)}</div>
       ${field.evidence ? `<div class="evidence">Источник: ${escapeHtml(field.evidence)}</div>` : ""}
     </div>`;

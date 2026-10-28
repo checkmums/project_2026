@@ -15,7 +15,12 @@ MONTHS = {
     "мая": 5, "июня": 6, "июля": 7, "августа": 8,
     "сентября": 9, "октября": 10, "ноября": 11, "декабря": 12,
 }
-ENTITY = r"(?:ООО|АО|ПАО|ЗАО|ИП)\s+(?:[«\"].+?[»\"]|[А-ЯЁ][А-Яа-яЁё.-]+(?:\s+[А-ЯЁ][А-Яа-яЁё.-]+){1,3})"
+ENTITY = (
+    r"(?:ООО|АО|ПАО|ЗАО|ИП|Акционерное\s+общество|"
+    r"Публичное\s+акционерное\s+общество|"
+    r"Общество\s+с\s+ограниченной\s+ответственностью)\s+"
+    r"(?:[«\"].+?[»\"]|[А-ЯЁ][А-Яа-яЁё.-]+(?:\s+[А-ЯЁ][А-Яа-яЁё.-]+){1,4})"
+)
 ROLE_MAP = {
     "заказчик": "customer", "покупатель": "customer", "арендатор": "customer",
     "принципал": "customer", "клиент": "customer", "заемщик": "customer",
@@ -117,8 +122,8 @@ def _parse_money(raw: str) -> float | None:
 
 
 def extract_amount(chunks: list[TextChunk]) -> tuple[ExtractedField, str | None]:
-    money = re.compile(r"(?<!\d)(\d{1,3}(?:[\s\u00a0.]\d{3})*(?:[,.]\d{2})?|\d{4,})(?!\d)(?:\s*\([^)]{0,60}\))?\s*(руб(?:лей|ля|ль|\.)?|₽|RUB|USD|EUR)", re.I)
-    anchors = ("сумма договора", "цена договора", "общая стоимость", "стоимость обязательств", "установлена в размере", "согласована в размере", "составляет")
+    money = re.compile(r"(?<!\d)(\d{1,3}(?:[\s\u00a0.]\d{3})*(?:[,.]\d{1,2})?|\d{4,}(?:[,.]\d{1,2})?)(?!\d)(?:\s*\([^)]{0,60}\))?\s*(руб(?:лей|ля|ль|\.)?|₽|RUB|USD|EUR)", re.I)
+    anchors = ("сумма договора", "цена договора", "общая стоимость", "стоимость обязательств", "установлена в размере", "согласована в размере", "составляет", "итого")
     reject = ("штраф", "пен", "аванс", "ндс", "цена единицы")
     candidates: list[Candidate] = []
     currency_by_candidate: dict[tuple[str, int], str] = {}
@@ -246,8 +251,17 @@ def extract_parties(
                 if candidate:
                     found[key].append(candidate)
 
-    customer = found["customer"][0] if found["customer"] else None
-    contractor = found["contractor"][0] if found["contractor"] else None
+    # Prefer strong candidates found close to the beginning of the document.
+    # Roles in later sections often describe obligations, not contract parties.
+    def best(candidates: list[Candidate]) -> Candidate | None:
+        return max(
+            candidates,
+            key=lambda candidate: (candidate.confidence, -chunks.index(candidate.chunk)),
+            default=None,
+        )
+
+    customer = best(found["customer"])
+    contractor = best(found["contractor"])
     if customer:
         customer = _with_ner_confirmation(customer, named_entities)
     if contractor:
