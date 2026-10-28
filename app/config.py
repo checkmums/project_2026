@@ -11,7 +11,7 @@ class Settings:
     database_path: Path
     uploads_dir: Path
     max_file_size: int = 20 * 1024 * 1024
-    pipeline_version: str = "rules-0.2.0"
+    pipeline_version: str = "hybrid-rules-natasha-0.3.0"
 
 
 def get_settings() -> Settings:

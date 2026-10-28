@@ -1,3 +1,4 @@
+from app.extraction.ner import extract_named_entities
 from app.extraction.readers import TextChunk
 from app.extraction.rules import extract_amount, extract_date, extract_number, extract_parties
 
@@ -45,4 +46,12 @@ def test_understands_entities_before_roles() -> None:
     customer, contractor = extract_parties(text)
     assert customer.value == "ООО «ТрансСиб Экспресс»"
     assert contractor.value == "ООО «Клиника Плюс»"
+
+
+def test_natasha_confirms_rule_based_party() -> None:
+    text = chunks("Заказчик | ООО «Ромашка»")
+    entities = extract_named_entities(text)
+    customer, _ = extract_parties(text, entities)
+    assert customer.value == "ООО «Ромашка»"
+    assert customer.method == "hybrid:regex+natasha_ner"
 

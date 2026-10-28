@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal, InvalidOperation
 
+from app.extraction.ner import NamedEntity
 from app.extraction.readers import TextChunk
 from app.schemas import ExtractedField, PartyField
 
@@ -151,7 +152,47 @@ def _party(candidate: Candidate | None, chunks: list[TextChunk]) -> PartyField:
     return PartyField(**base.model_dump(), role_label=candidate.role_label if candidate else None)
 
 
-def extract_parties(chunks: list[TextChunk]) -> tuple[PartyField, PartyField]:
+def _clean_entity(value: str) -> str:
+    return re.sub(r"[«»\".,;]", "", value).lower().strip()
+
+
+def _with_ner_confirmation(candidate: Candidate, entities: list[NamedEntity]) -> Candidate:
+    """Keep the precise rule-based value but record Natasha confirmation."""
+    expected = _clean_entity(str(candidate.value))
+    for entity in entities:
+        if entity.chunk != candidate.chunk:
+            continue
+        detected = _clean_entity(entity.text)
+        if detected and (detected in expected or expected in detected):
+            return Candidate(
+                candidate.value,
+                candidate.raw,
+                min(0.99, candidate.confidence + 0.03),
+                candidate.chunk,
+                "hybrid:regex+natasha_ner",
+                candidate.role_label,
+            )
+    return candidate
+
+
+def _ner_role_candidate(
+    role: str, index: int, chunks: list[TextChunk], entities: list[NamedEntity]
+) -> Candidate | None:
+    """Fallback when a role is present but the strict legal-form regex did not match."""
+    nearby_chunks = set(chunks[max(0, index - 1):index + 2])
+    nearby = [entity for entity in entities if entity.chunk in nearby_chunks]
+    if not nearby:
+        return None
+    # ORG is preferable for a company role; PER is useful for an individual entrepreneur.
+    entity = next((item for item in nearby if item.label == "ORG"), nearby[0])
+    value = entity.text.strip(".,;")
+    return Candidate(value, value, 0.86, entity.chunk, "natasha_ner:role_context", role.title())
+
+
+def extract_parties(
+    chunks: list[TextChunk], named_entities: list[NamedEntity] | None = None
+) -> tuple[PartyField, PartyField]:
+    named_entities = named_entities or []
     found: dict[str, list[Candidate]] = {"customer": [], "contractor": []}
     entity_pattern = re.compile(ENTITY)
     role_names = "|".join(ROLE_MAP)
@@ -174,7 +215,11 @@ def extract_parties(chunks: list[TextChunk]) -> tuple[PartyField, PartyField]:
                 label = match.group("role")
                 entity = match.group("entity").rstrip(".,;")
                 key = ROLE_MAP[label.lower()]
-                found[key].append(Candidate(entity, entity, 0.94, chunk, method, label.title()))
+                entity_chunk = next(
+                    (item for item in chunks[index:index + 2] if entity in item.text),
+                    chunk,
+                )
+                found[key].append(Candidate(entity, entity, 0.94, entity_chunk, method, label.title()))
 
         normalized_role = chunk.text.strip(" :—-").lower()
         if normalized_role in ROLE_MAP:
@@ -192,8 +237,21 @@ def extract_parties(chunks: list[TextChunk]) -> tuple[PartyField, PartyField]:
                     found[key].append(Candidate(entity_value, entity_value, 0.91, next_chunk, "regex:role_next_line", chunk.text.strip()))
                     break
 
+    for index, chunk in enumerate(chunks):
+        for role, key in ROLE_MAP.items():
+            if key in found and found[key]:
+                continue
+            if re.search(rf"\b{re.escape(role)}\b", chunk.text, re.I):
+                candidate = _ner_role_candidate(role, index, chunks, named_entities)
+                if candidate:
+                    found[key].append(candidate)
+
     customer = found["customer"][0] if found["customer"] else None
     contractor = found["contractor"][0] if found["contractor"] else None
+    if customer:
+        customer = _with_ner_confirmation(customer, named_entities)
+    if contractor:
+        contractor = _with_ner_confirmation(contractor, named_entities)
     if customer and contractor and customer.value == contractor.value:
         contractor = Candidate(contractor.value, contractor.raw, 0.55, contractor.chunk, contractor.method, contractor.role_label)
     return _party(customer, chunks), _party(contractor, chunks)
